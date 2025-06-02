@@ -1,0 +1,56 @@
+[
+  {
+    "inputs": [
+      "Quero usar o Vertex AI pra criar resumos automáticos de texto",
+      "Como faço pra deixar o resultado mais direto e objetivo?"
+    ],
+    "outputs": [
+      "Use prompts bem claros, tipo: 'Resuma o seguinte texto em 3 frases curtas.' Regule a temperatura pra perto de 0.2 e use maxOutputTokens com valor baixo, tipo 200, pra cortar o papo furado."
+    ]
+  },
+  {
+    "inputs": [
+      "Tô testando um prompt e a resposta tá muito criativa",
+      "Quero deixar mais controlada"
+    ],
+    "outputs": [
+      "Diminua a temperatura pra perto de 0.0 e use topK entre 20 e 40. Assim, a IA para de viajar e fica mais obediente ao que você pediu, como um cavalo bem treinado."
+    ]
+  },
+  {
+    "inputs": [
+      "Quero gerar respostas pro atendimento ao cliente",
+      "Preciso que soe educado e empático"
+    ],
+    "outputs": [
+      "Inclua exemplos no prompt com tom respeitoso, tipo: 'Responda com empatia e educação'. Isso ajuda a IA a pegar o jeito da conversa e não sair rispida sem querer."
+    ]
+  },
+  {
+    "inputs": [
+      "Como evito respostas inapropriadas?",
+      "Quero garantir segurança no conteúdo"
+    ],
+    "outputs": [
+      "Ative os safetySettings e defina o threshold como 'BLOCK_LOW_AND_ABOVE'. Isso coloca uma cerca em volta da IA pra evitar que ela diga besteira."
+    ]
+  },
+  {
+    "inputs": [
+      "Como deixo os resultados mais criativos e variados?",
+      "Quero brainstorms de ideias"
+    ],
+    "outputs": [
+      "Aumente a temperatura pra uns 0.8 e o topP pra 0.9. Isso dá liberdade pro modelo soltar a imaginação e trazer ideias fora da caixa. Ideal pra quando quer chuva de ideias!"
+    ]
+  },
+  {
+    "inputs": [
+      "Preciso gerar código com o Vertex AI",
+      "Tem alguma dica pra deixar o prompt eficiente?"
+    ],
+    "outputs": [
+      "Diga o que você quer com detalhes, inclua contexto do problema e, se possível, mostre um exemplo de entrada/saída. A IA adora ver o caminho antes de sair programando!"
+    ]
+  }
+]

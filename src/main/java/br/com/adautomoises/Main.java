@@ -1,25 +1,31 @@
 package br.com.adautomoises;
 
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         try (HttpClient httpClient = HttpClient.newBuilder().build()) {
-            String jsonRequestBody = """
+            String jsonRequestBody = String.format("""
                     {
                         "contents": [
                             {
                                 "role": "user",
                                 "parts": [
                                     {
-                                        "text": "Como executar um comando utilizado vertex ai api?"
+                                        "text": "%s"
                                     }
                                 ]
                             }
@@ -31,13 +37,7 @@ public class Main {
                             }
                           ]
                         },
-                        "generationConfig": {
-                            "candidateCount": 1,
-                            "temperature": 0.2,
-                            "maxOutputTokens": 1024,
-                            "topP": 0.8,
-                            "topK": 40
-                        },
+                        "generationConfig": %s,
                         "safetySettings": [
                             {
                                 "category": "HARM_CATEGORY_HATE_SPEECH",
@@ -57,7 +57,7 @@ public class Main {
                             }
                         ]
                     }
-                    """;
+                    """, getContentValue(), getParameters());
 
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(
@@ -79,7 +79,45 @@ public class Main {
         }
     }
 
-    private static String getAccessToken() throws IOException{
+    private static String getContentValue() throws IOException {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(Main.class.getClassLoader()
+                .getResourceAsStream("exemplos.json"))) {
+            Gson gson = new Gson();
+            Map<String, Object>[] exemplos = gson.fromJson(inputStreamReader, TypeToken.of(Map[].class).getType());
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Map<String, Object> exemplo : exemplos) {
+                String inputValue = (String) exemplo.get("input");
+                String outputValue = (String) exemplo.get("output");
+
+                stringBuilder.append(
+                        String.format("Input: %s\nOutput: %s\n\n", inputValue, outputValue)
+                );
+            }
+
+            return String.format("%s\n\ninput: %s\noutput:\n", System.getenv("CONTEXT"), inputStreamReader, getPrompt());
+        }
+    }
+
+    private static String getPrompt() {
+        System.out.println("Digite um comando:");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+
+    private static String getParameters() {
+        Map<String, Object> parametros = new HashMap<>();
+
+        parametros.put("candidateCount", Integer.parseInt(System.getenv("CANDIDATE_COUNT")));
+        parametros.put("maxOutputTokens", Integer.parseInt(System.getenv("MAX_OUTPUT_TOKENS")));
+        parametros.put("temperature", Double.parseDouble(System.getenv("TEMPERATURE")));
+        parametros.put("topP", Double.parseDouble(System.getenv("TOP-P")));
+        parametros.put("topK", Integer.parseInt(System.getenv("TOP-K")));
+
+        return new Gson().toJson(parametros);
+    }
+
+    private static String getAccessToken() throws IOException {
         try (InputStream serviceAccountStream = Main.class.getClassLoader()
                 .getResourceAsStream(System.getenv("SERVICE_ACCOUNT_FILE_PATH"))) {
 
